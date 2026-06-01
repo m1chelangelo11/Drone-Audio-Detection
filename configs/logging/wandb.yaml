@@ -1,0 +1,6 @@
+project: drone-audio-detection
+entity: michalwysocki
+name: rf-baseline
+tags:
+  - rf
+  - mfcc

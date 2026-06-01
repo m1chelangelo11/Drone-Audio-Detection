@@ -1,0 +1,8 @@
+defaults:
+  - data/mfcc
+  - data/preprocessing
+  - model/rf
+  - logging/wandb
+  - _self_
+
+seed: 42
