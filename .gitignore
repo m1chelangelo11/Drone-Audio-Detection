@@ -5,3 +5,7 @@ models/*
 !models/.gitkeep
 data/*
 !data/.gitkeep
+mlruns/
+.ruff_cache/
+*.pyc
+.env

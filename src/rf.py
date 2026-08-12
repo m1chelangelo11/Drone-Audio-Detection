@@ -1,20 +1,32 @@
-from sklearn.model_selection import GroupShuffleSplit
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+import logging as log
 from pathlib import Path
+
 import joblib
 import numpy as np
-from typing import Tuple
-import logging as log
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GroupShuffleSplit
+from sklearn.preprocessing import StandardScaler
+
+logger = log.getLogger(__name__)
 
 
-
-def train(X: np.ndarray, y: np.ndarray,
-          groups: np.ndarray, random_state: int,
-          n_estimators: int) -> Tuple[RandomForestClassifier, StandardScaler,
-                                      np.ndarray, np.ndarray, np.ndarray,
-                                      np.ndarray, np.ndarray]:
-    """Trains a Random Forest model for audio classification and saves 
+def train(
+    X: np.ndarray,
+    y: np.ndarray,
+    groups: np.ndarray,
+    random_state: int,
+    n_estimators: int,
+) -> tuple[
+    RandomForestClassifier,
+    StandardScaler,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+]:
+    """
+    Trains a Random Forest model for audio classification and saves
     it and its' scaler in models directory
 
     Args:
@@ -43,21 +55,21 @@ def train(X: np.ndarray, y: np.ndarray,
         X_test = scaler.transform(X_test)
         X_val = scaler.transform(X_val)
 
-        classifier = RandomForestClassifier(n_estimators = n_estimators,
-                                            random_state = random_state,
-                                            class_weight = 'balanced')
+        classifier = RandomForestClassifier(
+            n_estimators=n_estimators,
+            random_state=random_state,
+            class_weight="balanced",
+        )
         classifier.fit(X_train, y_train)
         y_pred = classifier.predict(X_test)
 
         root = Path(__file__).resolve().parents[1]
 
-        joblib.dump(classifier, root / 'models' / 'rf.joblib')
-        joblib.dump(scaler, root / 'models' / 'rf_scaler.joblib')
+        joblib.dump(classifier, root / "models" / "rf.joblib")
+        joblib.dump(scaler, root / "models" / "rf_scaler.joblib")
 
         return classifier, scaler, y_pred, X_test, y_test, X_val, y_val
 
-    except Exception as e:
-        log.error(f"Error while training: {e}")
+    except Exception as e: # noqa: BLE001
+        logger.error(f"Error while training: {e}")
         return None
-    
-

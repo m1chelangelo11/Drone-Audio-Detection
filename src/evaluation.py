@@ -1,18 +1,29 @@
-from sklearn.metrics import (accuracy_score,
-                             confusion_matrix,
-                             roc_auc_score,
-                             average_precision_score,
-                             classification_report)
-from sklearn.ensemble import RandomForestClassifier
-from typing import Tuple
-import numpy as np
 import logging as log
 
-def evaluation(X_test: np.ndarray, y_test: np.ndarray, y_pred: np.ndarray,
-               classifier: RandomForestClassifier, X_val: np.ndarray,
-               y_val: np.ndarray) -> Tuple:
-    """Evaluates model using accuracy score, confusion matrix, roc_auc
-    score, pr_auc score, precission, recall and f1 score for each test 
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    classification_report,
+    confusion_matrix,
+    roc_auc_score,
+)
+
+logger = log.getLogger(__name__)
+
+
+def evaluation(
+    X_test: np.ndarray,
+    y_test: np.ndarray,
+    y_pred: np.ndarray,
+    classifier: RandomForestClassifier,
+    X_val: np.ndarray,
+    y_val: np.ndarray,
+) -> tuple:
+    """
+    Evaluates model using accuracy score, confusion matrix, roc_auc
+    score, pr_auc score, precission, recall and f1 score for each test
     and validation predictions
 
     Args:
@@ -21,7 +32,7 @@ def evaluation(X_test: np.ndarray, y_test: np.ndarray, y_pred: np.ndarray,
         classifier: saved Random Forest model
         X_val: features validation subset
         y_val: target validation subset
-    
+
     Returns:
         Tuple of all the results
     """
@@ -55,9 +66,19 @@ def evaluation(X_test: np.ndarray, y_test: np.ndarray, y_pred: np.ndarray,
         print(f"Validation PR_AUC: {pr_auc_val:.4f}")
         print(f"Validation Classification Report: {cr_val}")
 
-        return (acc, acc_val, conf_matrix, conf_matrix_val,
-                roc_auc,roc_auc_val, pr_auc, pr_auc_val, cr, cr_val)
-    
-    except Exception as e:
-        log.error(f"Error while evaluating: {e}")
+        return (
+            acc,
+            acc_val,
+            conf_matrix,
+            conf_matrix_val,
+            roc_auc,
+            roc_auc_val,
+            pr_auc,
+            pr_auc_val,
+            cr,
+            cr_val,
+        )
+
+    except Exception as e: #noqa: BLE001
+        logger.error(f"Error while evaluating: {e}")
         return None
